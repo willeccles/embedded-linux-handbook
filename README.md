@@ -40,4 +40,5 @@ of Linux with RT PREEMPT patches.
 # Table of Contents
 
 1. [Basic Concepts of Embedded Linux](basics.md)
+2. [U-Boot](u-boot.md)
 
