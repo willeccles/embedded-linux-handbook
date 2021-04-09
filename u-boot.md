@@ -2,7 +2,7 @@
 
 # U-Boot
 
-Website: https://www.denx.de/wiki/U-Boot
+Website: [https://www.denx.de/wiki/U-Boot](https://www.denx.de/wiki/U-Boot)
 
 U-Boot ("Das U-Boot") is a boot loader for embedded systems. It could
 theoretically be used for your desktop machine as well, but it is mainly
