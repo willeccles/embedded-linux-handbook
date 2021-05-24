@@ -223,3 +223,10 @@ hwmon devices, it will be 0). We can see how the device works in
 read the temperatures in our system, poll for alarms, and change alarm
 thresholds--all without tediously writing I2C frames, setting up registers, and
 so on.
+
+----
+
+## References
+
+1. [Device tree usage model (Linux kernel documentation)
+](https://www.kernel.org/doc/Documentation/devicetree/usage-model.txt)
