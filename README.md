@@ -11,6 +11,7 @@ intended to simplify the process of building an embedded Linux system.
 2. [U-Boot](u-boot.md)
 4. [Device Trees](device-tree.md)
 5. [Writing Real-Time Software on Linux](rt-software.md)
+6. [Using SPI From Userspace Applications (spidev)](spidev.md)
 
 ## What it is
 
