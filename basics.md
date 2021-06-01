@@ -25,6 +25,15 @@ The boot loader is in charge of preparing the system, enabling clocks, powering
 up peripherals, and so on. It will then load the Linux kernel and execute it
 with some set of arguments that you can choose.
 
+<!-- vim-markdown-toc GFM -->
+
+* [Boot Loader](#boot-loader)
+* [Device Tree](#device-tree)
+* [Kernel Drivers](#kernel-drivers)
+* [User-space](#user-space)
+
+<!-- vim-markdown-toc -->
+
 ## Boot Loader
 
 In the boot loader, you will initialize the very basics of the processor. This

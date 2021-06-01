@@ -5,6 +5,13 @@
 This manual or handbook or guide or reference or whatever you want to call it is
 intended to simplify the process of building an embedded Linux system.
 
+## Table of Contents
+
+1. [Basic Concepts of Embedded Linux](basics.md)
+2. [U-Boot](u-boot.md)
+4. [Device Trees](device-tree.md)
+5. [Writing Real-Time Software on Linux](rt-software.md)
+
 ## What it is
 
 A simple reference for many of the more obscure concepts in embedded Linux,
@@ -36,11 +43,4 @@ experiences on that project and potentially future ones.
 This guide will talk a little bit about U-Boot, device trees, and user-space
 code using device drivers. It may also touch on the usage of Linux with RT
 PREEMPT patches.
-
-# Table of Contents
-
-1. [Basic Concepts of Embedded Linux](basics.md)
-2. [U-Boot](u-boot.md)
-4. [Device Trees](device-tree.md)
-5. [Writing Real-Time Software on Linux](rt-software.md)
 

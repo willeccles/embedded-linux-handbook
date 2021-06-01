@@ -17,6 +17,21 @@ what works best for you rather than blindly following what someone online said
 will work. This worked for me, and should work in most or all other cases, but
 may not be appropriate for your use case.
 
+<!-- vim-markdown-toc GFM -->
+
+* [Real-Time vs. Real Fast](#real-time-vs-real-fast)
+* [RT Tasks](#rt-tasks)
+  * [Scheduling Options](#scheduling-options)
+  * [Memory Locking](#memory-locking)
+  * [Creating Tasks](#creating-tasks)
+  * [EDF Scheduling](#edf-scheduling)
+  * [Task Timing](#task-timing)
+  * [Task Synchronization](#task-synchronization)
+    * [Mutexes](#mutexes)
+    * [Condition Variables](#condition-variables)
+
+<!-- vim-markdown-toc -->
+
 ## Real-Time vs. Real Fast
 
 I encourage you to read [this excellent
