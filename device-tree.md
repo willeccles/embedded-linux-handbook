@@ -25,6 +25,7 @@ one (such as the base one for your chip) with your own bindings.
 
 Device trees for ARM devices are located in `arch/arm/boot/dts`.
 
+## Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Format](#format)

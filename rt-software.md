@@ -17,6 +17,7 @@ what works best for you rather than blindly following what someone online said
 will work. This worked for me, and should work in most or all other cases, but
 may not be appropriate for your use case.
 
+## Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Real-Time vs. Real Fast](#real-time-vs-real-fast)
