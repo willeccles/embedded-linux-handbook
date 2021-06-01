@@ -273,7 +273,7 @@ void* rt_task(void* data) {
   struct tasktimer timer;
   int ret;
 
-  ret = tasktimer_init(&timer);
+  ret = tasktimer_init(&timer, 1000000);
   if (ret < 0) {
     perror("tasktimer_init");
     // handle error however fits your program the best
