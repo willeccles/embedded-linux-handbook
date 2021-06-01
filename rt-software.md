@@ -27,6 +27,14 @@ and the like) or a standard "real fast" kernel (the sort an average desktop user
 might use). There are benchmarks, code samples, and hard data explaining when to
 choose each.
 
+Here's a few quick details:
+- If your system needs to meet precise timing requirements and be extremely
+  deterministic, then you want real-time
+- If your system is just going to be used for basic user-space things (such as
+  building the Linux kernel, as shown in the paper), you should use real fast
+- If your system needs to be on time, use real-time; if your system needs to
+  process a bunch of data, use real fast
+
 Now that you should be fully aware of which to choose (or at least have some
 inkling that you should choose one or the other, but may need to do more
 testing), we can get on with the real-time stuff.
