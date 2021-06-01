@@ -42,4 +42,5 @@ of Linux with RT PREEMPT patches.
 1. [Basic Concepts of Embedded Linux](basics.md)
 2. [U-Boot](u-boot.md)
 3. [Device Trees](device-tree.md)
+4. [Writing Real-Time Software on Linux](rt-software.md)
 
