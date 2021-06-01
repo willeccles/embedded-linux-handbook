@@ -33,14 +33,14 @@ experiences on that project and potentially future ones.
 
 ## Topics covered
 
-This guide will talk a little bit about U-Boot, Linux configuration, device
-trees, and user-space code using device drivers. It may also touch on the usage
-of Linux with RT PREEMPT patches.
+This guide will talk a little bit about U-Boot, device trees, and user-space
+code using device drivers. It may also touch on the usage of Linux with RT
+PREEMPT patches.
 
 # Table of Contents
 
 1. [Basic Concepts of Embedded Linux](basics.md)
 2. [U-Boot](u-boot.md)
-3. [Device Trees](device-tree.md)
-4. [Writing Real-Time Software on Linux](rt-software.md)
+4. [Device Trees](device-tree.md)
+5. [Writing Real-Time Software on Linux](rt-software.md)
 
