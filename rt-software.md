@@ -27,6 +27,8 @@ may not be appropriate for your use case.
   * [Creating Tasks](#creating-tasks)
   * [EDF Scheduling](#edf-scheduling)
   * [Task Timing](#task-timing)
+    * [Explanation](#explanation)
+    * [Clock Selection: `CLOCK_REALTIME` or `CLOCK_MONOTONIC`?](#clock-selection-clock_realtime-or-clock_monotonic)
   * [Task Synchronization](#task-synchronization)
     * [Mutexes](#mutexes)
     * [Condition Variables](#condition-variables)
@@ -248,6 +250,8 @@ inline int tasktimer_init(struct tasktimer* tmr, long period_ns) {
 inline void tasktimer_inc(struct tasktimer* tmr) {
   tmr->next_period.tv_nsec += tmr->period_ns;
 
+  // since the number of nanoseconds is not allowed to go above 999999999, we
+  // have to deal with rollover of the nanoseconds into seconds here
   while (tmr->next_period.tv_nsev >= 1000000000L) {
     ++tmr->next_period.tv_sec;
     tmr->next_period.tv_nsec -= 1000000000L;
@@ -259,6 +263,8 @@ inline int tasktimer_wait(struct tasktimer* tmr) {
 
   tasktimer_inc(tmr);
 
+  // this loop is required to deal with the sleep being interrupted by signals
+  // (if any)
   do {
     ret = clock_nanosleep(CLOCK_MONOTONIC,
                           TIMER_ABSTIME,
@@ -292,8 +298,84 @@ void* rt_task(void* data) {
 }
 ```
 
-This should allow other tasks to fill in the gaps while this task is sleeping.
-It also results in extremely precise timing on RT-patched systems.
+#### Explanation
+
+In the above example, the basic idea is that each task will follow the following
+(pseudocode) steps:
+
+```
+t := current time
+
+while true:
+  do work
+  t := t + 1ms
+  sleep until t
+```
+
+This may initially seem odd to some, as it is much more intuitive to do work,
+then sleep for 1ms, then repeat. However, since the task's work will take some
+amount of time, this means that you will be sleeping the task for 1 millisecond,
+but you won't be accurately keeping time. If the task starts its work at 0ms,
+takes 50μs to complete, and then sleeps for 1ms, the next cycle will start at
+1.05ms rather than 1ms. By using an absolute time for `t` in this example, the
+task is guaranteed to always do its work at precise (as precise as the timer can
+be, anyway) 1ms intervals, so long as the work takes less than 1ms.
+
+When the work takes longer than 1ms (so that `t + 1ms` is in the past), this
+does nothing special to handle that situation, so it's up to you to deal with
+it. To understand the behavior in the example above, we can refer to the manual
+page for [`clock_nanosleep(3p)`](https://man7.org/linux/man-pages/man3/clock_nanosleep.3p.html):
+
+> If, at the time of the call, the time value specified by `rqtp` is less than
+> or equal to the time value of the specified clock, then `clock_nanosleep()`
+> shall return immediately and the calling process shall not be suspended.
+
+Thus, if the task in the example above were to do 1.5ms of work, it would
+immediately wake again and do work, and would repeat this until it caught up.
+It's up to you whether or not this is acceptable, but in most cases you should
+avoid doing more work than the time window you're allotted, of course.
+
+The most important and most confusing part of the code above is the
+`tasktimer_wait()` function. This code looks a little bit cryptic, but it's
+actually quite simple. First, we increment the time value so we know when to
+sleep until, which should be pretty intuitive. Next, we just need to sleep until
+that time, right? Why is there a loop there? If we check the manual page for
+`clock_nanosleep()` again, it will shed a little light on this behavior:
+
+> The suspension time for the absolute `clock_nanosleep()` function (that is,
+> with the `TIMER_ABSTIME` flag set) shall be in effect at least until the value
+> of the corresponding clock reaches the absolute time specified by `rqtp`,
+> **except for the case of being interrupted by a signal.**
+
+I added bold to emphasize the important part: the sleep can be interrupted by
+the delivery of a signal to the thread. After a little more reading, we come to
+find out that if an error occurs, this function returns -1 (whereas it returns
+0 on success), and that if the sleep was interrupted by a signal, it will set
+`errno` to `EINTR`. In order to resume the sleep when we receive a signal, we
+use the loop to check if the return value was negative *and* `errno` is set to
+`EINTR`. If either of those is not true, we exit the loop and return whatever
+return value `clock_nanosleep()` gave us, regardless of whether it was
+successful or not.
+
+#### Clock Selection: `CLOCK_REALTIME` or `CLOCK_MONOTONIC`?
+
+While the last 3 arguments to `clock_nanosleep()` are well-explained in the man
+page, the first one is a little less obvious. Why choose `CLOCK_MONOTONIC` over
+the other clock options? If we check the POSIX manual page for
+[`time.h(0p)`](https://man7.org/linux/man-pages/man0/time.h.0p.html), we will
+see that there is a `CLOCK_REALTIME`. Why not use the `REALTIME` clock for our
+real-time tasks?
+
+Unfortunately, this is an easy mistake to make, but the name of the clock has
+nothing to do with *real-time*, but rather, it measures *real time*.
+`CLOCK_REALTIME` is the actual wall clock time, and can changed backwards,
+forwards, and so on at the whim of an administrator or any other process.
+However, the value of `CLOCK_MONOTONIC` cannot be changed. In fact, the
+`clock_settime()` function will immediately return `EINVAL` if you attempt to
+set the monotonic clock. It can never go backwards, be changed by an
+administrator, and is not affected by the wall clock time. It is purely
+a measure of how long it has been in seconds and nanoseconds since some
+arbitrary fixed point in the past, which is precisely what we need here.
 
 ### Task Synchronization
 
@@ -310,7 +392,7 @@ major difference: you *must* set the mutex to inherit the priority of the tasks
 waiting on it. This allows for proper [priority inversion](https://wiki.linuxfoundation.org/realtime/documentation/technical_basics/pi)
 when tasks are waiting on other tasks to finish with the lock. When creating
 your mutex, you should do the following (the initialization of the mutex has
-been left out for brevity, so see [pthread_mutex_init(3p)](https://man7.org/linux/man-pages/man3/pthread_mutex_init.3p.html)
+been left out for brevity, so see [pthread\_mutex\_init(3p)](https://man7.org/linux/man-pages/man3/pthread_mutex_init.3p.html)
 for more info). Error handling has been omitted for brevity.
 
 ```c
