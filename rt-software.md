@@ -40,9 +40,9 @@ may not be appropriate for your use case.
 I encourage you to read [this excellent
 paper](https://www.kernel.org/doc/ols/2008/ols2008v2-pages-57-66.pdf) written by
 Pale E McKenney of the IBM Linux Technology Center. This paper explains how to
-choose whether or not you want a real-time kernel (using the PREEMPT RT patches
-and the like) or a standard "real fast" kernel (the sort an average desktop user
-might use). There are benchmarks, code samples, and hard data explaining when to
+choose whether you want a real-time kernel (using the PREEMPT RT patches and the
+like) or a standard "real fast" kernel (the sort an average desktop user might
+use). There are benchmarks, code samples, and hard data explaining when to
 choose each.
 
 Here's a few quick details:
@@ -84,8 +84,8 @@ it's commonly recommended not to give a task priority 99, as this priority will
 compete with interrupt handlers and the like, causing a lot of slowdowns.
 Instead, max your tasks out at 98 when using FIFO or RR scheduling.
 
-Again, in accordance with best practices, you should avoid memory allocation in
-hot paths of real-time tasks. You should use statically allocated memory when
+As usual, in accordance with best practices, you should avoid memory allocation
+in hot paths of real-time tasks. You should use statically allocated memory when
 possible, or if you must use dynamic allocation, you should allocate it ahead of
 time as much as possible. At the very least, you should allocate a pool of
 memory to use later on if you must.
