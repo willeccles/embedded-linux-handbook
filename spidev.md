@@ -29,8 +29,8 @@ at /usr/include/linux/spi/spidev.h (or a similar location for cross-compile
 toolchains and such). Additionally, the kernel source includes an example
 program using the SPI userspace API, which is a good reference.
 
-Here is an example of open a SPI device and configuring it for 10MHz in SPI mode
-2 with 8 bits per word:
+Here is an example of opening a SPI device and configuring it for 10MHz in SPI
+mode 2 with 8 bits per word:
 
 ```c
 #include <errno.h>
@@ -55,7 +55,7 @@ int openspidev(int bus, int cs) {
     return -1;
   }
 
-  snprintf(devpath, 35, "/dev/spidev%d.%d\n", bus, cs);
+  snprintf(devpath, 35, "/dev/spidev%d.%d", bus, cs);
 
   // check if the device exists
   if (access(devpath, F_OK) != 0) {
